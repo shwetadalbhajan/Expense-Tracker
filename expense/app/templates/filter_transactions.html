@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Transactions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #333;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-buttons a {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #6A11CB, #2575FC);
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .header-buttons a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.5);
+        }
+
+        .container {
+            width: 95%;
+            max-width: 800px;
+            margin: 140px auto 40px;
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1rem;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        input, button {
+            font-size: 1rem;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 0 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            border: none;
+            background: linear-gradient(90deg, #6A11CB, #2575FC);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #6A11CB, #2575FC);
+            margin-top: 20px;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        a:hover {
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.5);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 140px;
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .header-buttons a {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+            button {
+                font-size: 1rem;
+                padding: 12px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Expense Tracker</h1>
+        <div class="header-buttons">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'transaction' %}">Add Transaction</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Filter Transactions</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="from_date">From Date:</label>
+            <input type="date" id="from_date" name="from_date" required>
+            <label for="to_date">To Date:</label>
+            <input type="date" id="to_date" name="to_date" required>
+            <button type="submit">Filter</button>
+        </form>
+        {% if transactions %}
+        <table>
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+            <tbody>
+            {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.model_name }}</td>
+            <td>
+                {% if transaction.model_name == 'Income' %}
+                    {{ transaction.source }}
+                {% else %}
+                    {{ transaction.category }}
+                {% endif %}
+            </td>
+            <td>₹ {{ transaction.amount }}</td>
+        </tr>
+        {% endfor %}
+
+            </tbody>
+         </table>
+        <a href="{% url 'download_pdf' %}?from_date={{ from_date }}&to_date={{ to_date }}">Download PDF</a>
+        {% endif %}
+        {% if not transactions %}
+        <p>No transactions found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

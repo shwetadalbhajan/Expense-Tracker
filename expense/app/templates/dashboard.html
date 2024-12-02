@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-top: 80px; /* to avoid content being hidden under the fixed header */
+            background-attachment: fixed;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #333;
+            letter-spacing: 2px;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .header-buttons a {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #6A11CB, #2575FC);
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, color 0.3s;
+            text-decoration: none;
+        }
+
+        .header-buttons a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.5);
+        }
+
+        .overview {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            margin-bottom: 40px;
+            width: 95%;
+            gap: 20px;
+        }
+
+        .overview .card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            width: 32%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .overview .card.balance {
+            width: 40%; /* Make the balance card wider */
+        }
+
+        .overview .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .overview .card h3 {
+            font-size: 24px;
+            color: #2C3E50;
+            margin-bottom: 10px;
+        }
+
+        .overview .card p {
+            font-size: 32px;
+            color: #1ABC9C;
+            font-weight: bold;
+        }
+
+        .overview .card.balance p {
+            font-size: 32px;
+            color: #EB3678;
+            font-weight: bold;
+        }
+
+        .transactions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 20px;
+            width: 95%;
+        }
+
+        .transactions .card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            width: 48%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .transactions .card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .transactions .card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .transactions .card li {
+            padding: 10px;
+            border-bottom: 1px solid #EAEDED;
+            color: #34495E;
+        }
+
+        .charts-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            width: 95%;
+        }
+
+        .chart-card {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 30%; /* Adjusted to fit 3 charts in one row */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-card h4 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #2C3E50;
+            text-align: center;
+        }
+
+        .chart-card img {
+            width: 100%;
+            border-radius: 10px;
+            height: auto;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+            background: rgba(106, 17, 203, 0.1);
+            animation: float 6s infinite ease-in-out alternate;
+        }
+
+        .circle-1 {
+            width: 180px;
+            height: 180px;
+            top: -50px;
+            left: -80px;
+        }
+
+        .circle-2 {
+            width: 250px;
+            height: 250px;
+            bottom: 0px;
+            right: -60px;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(30px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .overview, .transactions {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .overview .card, .transactions .card, .chart-card {
+                width: 100%;
+            }
+
+            .header-buttons a {
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Expense Tracker</h1>
+        <div class="header-buttons">
+            <a href="{% url 'transaction' %}">Add Transaction</a>
+            <a href="{% url 'filter_transactions' %}">View Transaction</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </header>
+
+    <div class="overview">
+        <div class="card balance">
+            <h3>Balance</h3>
+            <p>₹{{ balance }}</p>
+        </div>
+        <div class="card">
+            <h3>Total Income</h3>
+            <p>₹{{ total_income }}</p>
+        </div>
+        <div class="card">
+            <h3>Total Expense</h3>
+            <p>₹{{ total_expense }}</p>
+        </div>
+    </div>
+
+    <div class="transactions">
+        <div class="card">
+            <h3>Recent Expenses</h3>
+            <ul>
+                {% for expense in recent_expenses %}
+                    <li>{{ expense.date }}: ₹{{ expense.amount }} - {{ expense.category }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="card">
+            <h3>Recent Incomes</h3>
+            <ul>
+                {% for income in recent_incomes %}
+                    <li>{{ income.date }}: ₹{{ income.amount }} - {{ income.source }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-card">
+            <h4>Monthly Income vs Expense</h4>
+            <img src="data:image/png;base64,{{ monthly_chart }}" alt="Monthly Income vs Expense">
+        </div>
+        <div class="chart-card">
+            <h4>Expenses by Category</h4>
+            <img src="data:image/png;base64,{{ expense_chart }}" alt="Expense by Category">
+        </div>
+        <div class="chart-card">
+            <h4>Daily Expense</h4>
+            <img src="data:image/png;base64,{{ daily_chart }}" alt="Daily Expense">
+        </div>
+    </div>
+
+</body>
+</html>

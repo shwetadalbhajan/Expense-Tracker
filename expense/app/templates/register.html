@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
+            background-attachment: fixed; /* Keeps the background static */
+            height: auto; /* Allows the body to expand with content */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 600px;
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            overflow-y: auto; /* Ensures scrollbar appears if content overflows */
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #555555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #333;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+            color: #333;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        input:focus {
+            background: #eee;
+            outline: none;
+        }
+
+        button {
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #6A11CB, #2575FC);
+            color: #ffffff;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.5);
+            color: #ffffff;
+        }
+
+        .login-link {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #6A11CB;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+            transition: color 0.3s ease, text-decoration 0.3s ease;
+        }
+
+        .login-link:hover {
+            color: #2575FC;
+            text-decoration: underline;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px; /* Narrower scrollbar width */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(240, 240, 240, 0.6); /* Light, subtle background */
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #e0e0e0, #d4d4d4); /* Soft gradient for thumb */
+            border-radius: 10px;
+            box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #cccccc, #bfbfbf); /* Slightly darker hover effect */
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background: linear-gradient(135deg, #bbbbbb, #aaaaaa); /* Darker active state */
+        }
+
+        /* Floating Elements */
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+            background: rgba(106, 17, 203, 0.1);
+            animation: float 6s infinite ease-in-out alternate;
+        }
+
+        .circle-1 {
+            width: 180px;
+            height: 180px;
+            top: -50px;
+            left: -80px;
+        }
+
+        .circle-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -80px;
+            right: -60px;
+        }
+
+        .error-message {
+            background-color: rgba(255, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-circle circle-1"></div>
+    <div class="floating-circle circle-2"></div>
+    <div class="container">
+        <h1>Register</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required>
+
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}">
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <button type="submit">Register</button>
+        </form>
+        <a href="{% url 'login' %}" class="login-link">Already have an account? Login</a>
+    </div>
+</body>
+</html>

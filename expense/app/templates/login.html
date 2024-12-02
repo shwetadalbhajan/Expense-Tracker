@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
+            height: 100vh;
+            overflow: hidden; /* Prevents scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-attachment: fixed;
+        }
+
+        .form-container {
+            width: 85%;
+            max-width: 500px; /* Reduced width */
+            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #333;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+            color: #333;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        input:focus {
+            background: #eee;
+            outline: none;
+        }
+
+        button {
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #6A11CB, #2575FC);
+            color: #ffffff;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.5);
+            color: #ffffff;
+        }
+
+        .register-link {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #6A11CB;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+            transition: color 0.3s ease, text-decoration 0.3s ease;
+        }
+
+        .register-link:hover {
+            color: #2575FC;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background-color: rgba(255, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Floating Elements */
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+            background: rgba(106, 17, 203, 0.1);
+            animation: float 6s infinite ease-in-out alternate;
+        }
+
+        .circle-1 {
+            width: 180px;
+            height: 180px;
+            top: -50px;
+            left: -80px;
+        }
+
+        .circle-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -40px;
+            right: -60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-circle circle-1"></div>
+    <div class="floating-circle circle-2"></div>
+    <div class="form-container">
+        <h2>Login</h2>
+
+        <!-- Display error messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="error-message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="post">
+            {% csrf_token %}
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <a href="{% url 'register' %}" class="register-link">Don't have an account? Register here</a>
+    </div>
+</body>
+</html>

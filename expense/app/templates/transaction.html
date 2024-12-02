@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Transaction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        header {
+        width: 100%;
+        height: 100px; /* Fixed height for consistent spacing */
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center; /* Centers content vertically */
+        padding: 0 30px; /* Side padding only */
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        box-sizing: border-box;
+    }
+
+    header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem; /* Keeps heading size intact */
+        color: #333;
+        letter-spacing: 2px;
+        animation: fadeIn 1.2s ease-out;
+        margin: 0; /* Removes any default margin */
+    }
+
+    .header-buttons {
+        display: flex;
+        gap: 20px;
+    }
+
+    .header-buttons a {
+        padding: 12px 30px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(90deg, #6A11CB, #2575FC);
+        color: #fff;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s, color 0.3s;
+        text-decoration: none;
+    }
+
+    .header-buttons a:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(106, 17, 203, 0.5);
+    }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 25px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-top: 120px; /* Adjusted margin for more gap */
+        }
+
+        .messages {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .messages .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .messages .message.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .messages .message.error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #333333;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #333;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+            color: #333;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            background: #eee;
+            outline: none;
+        }
+
+        button {
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(90deg, #6A11CB, #2575FC);
+            color: #ffffff;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(106, 17, 203, 0.5);
+            color: #ffffff;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+            background: rgba(106, 17, 203, 0.1);
+            animation: float 6s infinite ease-in-out alternate;
+        }
+
+        .circle-1 {
+            width: 180px;
+            height: 180px;
+            top: -50px;
+            left: -80px;
+        }
+
+        .circle-2 {
+            width: 250px;
+            height: 250px;
+            bottom: -80px;
+            right: -60px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 140px;
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .header-buttons a {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+            button {
+                font-size: 1rem;
+                padding: 12px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Expense Tracker</h1>
+        <div class="header-buttons">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'filter_transactions' %}">View Transaction</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </header>
+
+    <div class="floating-circle circle-1"></div>
+    <div class="floating-circle circle-2"></div>
+
+    <div class="container">
+        <h1>Add Transaction</h1>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <label for="type">Transaction Type:</label>
+            <select id="type" name="type" onchange="toggleFields()" required>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
+
+            <div id="income-fields">
+                <label for="source">Source:</label>
+                <input type="text" id="source" name="source">
+            </div>
+
+            <div id="expense-fields" class="hidden">
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="Food">Food</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const type = document.getElementById('type').value;
+            const incomeFields = document.getElementById('income-fields');
+            const expenseFields = document.getElementById('expense-fields');
+
+            if (type === 'income') {
+                incomeFields.classList.remove('hidden');
+                expenseFields.classList.add('hidden');
+            } else {
+                incomeFields.classList.add('hidden');
+                expenseFields.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
